@@ -1,0 +1,1 @@
+This repository contains LU decomposition in python, openmp and java using Doolittle algorithm. This is a project to PA1.
