@@ -1,3 +1,5 @@
+import java.util.stream.IntStream;
+
 public class LuDecomposition {
     private int size;
     private double[][] matrix;
@@ -20,7 +22,6 @@ public class LuDecomposition {
     public void decompose() {
         double[][] upper = new double[this.size][this.size];
         double[][] lower = new double[this.size][this.size];
-        double sum = 0.0;
 
         for(int i=0; i<size; i++) {
             for(int j=0; j<size; j++) {
@@ -31,10 +32,10 @@ public class LuDecomposition {
 
         long start = System.nanoTime();
 
-        for(int i=0; i<size; i++) {
+        IntStream.range(0, size).parallel().forEach(i -> {
             // U matrix
             for(int k=i; k<size; k++) {
-                sum = 0.0;
+                double sum = 0.0;
                 for(int j=0; j<i; j++) {
                     sum += (lower[i][j] * upper[j][k]);
                 }
@@ -45,15 +46,15 @@ public class LuDecomposition {
                 if(i==k) {
                     lower[i][i] = 1;
                 } else {
-                    sum = 0.0;
+                    double sum = 0.0;
                     for(int j=0; j<i; j++) {
                         sum += (lower[k][j] * upper[j][i]);
                     }
                     lower[k][i] = ((matrix[k][i] - sum) / upper[i][i]);
                 }
-
             }
-        }
+        });
+
         long end = System.nanoTime();
 
         //printMatrix(matrix);
